@@ -19,6 +19,21 @@ export const fetchDcRequest = () => ({ type: FETCH_DC_REQUEST });
 export const fetchDcSuccess = (data) => ({ type: FETCH_DC_SUCCESS, payload: data });
 export const fetchDcFailure = (error) => ({ type: FETCH_DC_FAILURE, payload: error });
 
+// Action Creators
+export const fetchAvailableSeatsRequest = () => ({
+  type: FETCH_AVAILABLE_SEATS_REQUEST,
+});
+
+export const fetchAvailableSeatsSuccess = (data) => ({
+  type: FETCH_AVAILABLE_SEATS_SUCCESS,
+  payload: data,
+});
+
+export const fetchAvailableSeatsFailure = (error) => ({
+  type: FETCH_AVAILABLE_SEATS_FAILURE,
+  payload: error,
+});
+
 // Thunk for API call
 export const fetchDcDetails = () => async (dispatch) => {
   dispatch(fetchDcRequest());
@@ -33,30 +48,34 @@ export const fetchDcDetails = () => async (dispatch) => {
 };
 
 
-
-
-
-
+// Thunk Action (async)
 export const fetchAvailableSeats = (wingId, duration, dates, timeSlot) => async (dispatch) => {
-  dispatch({ type: FETCH_AVAILABLE_SEATS_REQUEST });
-
+  dispatch(fetchAvailableSeatsRequest());
   try {
-    const response = await axios.post("https://seatn-sync-production.up.railway.app/infy/seats/availability", {
-      wingId,
-      duration,
-      dates,
-      timeSlot,
-    });
+    const response = await axios.post(
+      "https://seatn-sync-production.up.railway.app/infy/seats/availability",
+      {
+        wingId,
+        duration,
+        dates,
+        timeSlot,
+      },
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
-    dispatch({
-      type: FETCH_AVAILABLE_SEATS_SUCCESS,
-      payload: response
-    });
-    console.log("AvailableSeats", response.fullDayAvailability);
+    // ✅ Extract only the relevant data
+    const { fullDayAvailability, slotAvailability } = response.data;
+
+    dispatch(
+      fetchAvailableSeatsSuccess({
+        fullDayAvailability,
+        slotAvailability,
+      })
+    );
+       console.log("AvailableSeats Action:", response.data);
   } catch (error) {
-    dispatch({
-      type: FETCH_AVAILABLE_SEATS_FAILURE,
-      payload: error.message,
-    });
+    dispatch(fetchAvailableSeatsFailure(error.message));
   }
 };

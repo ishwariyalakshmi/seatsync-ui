@@ -11,7 +11,8 @@ const initialState = {
   error: null,
   dcData: [],   // API response stored here
   dates:[],
-  availableSeats: [],
+  fullDayAvailability:{},
+  slotAvailability:null,
   bookingType: "",
   city: "",
   branch: "",
@@ -35,7 +36,11 @@ export const bookingReducer = (state = initialState, action) => {
       case FETCH_AVAILABLE_SEATS_REQUEST:
       return { ...state, loadingSeats: true, errorSeats: null };
     case FETCH_AVAILABLE_SEATS_SUCCESS:
-      return { ...state, loadingSeats: false, availableSeats: action.payload };
+      return { ...state, 
+      loading: false,
+      fullDayAvailability: action.payload.fullDayAvailability,
+      slotAvailability: action.payload.slotAvailability,
+    };
     case FETCH_AVAILABLE_SEATS_FAILURE:
       return { ...state, loadingSeats: false, errorSeats: action.payload };
     case SET_FORM_DATA:

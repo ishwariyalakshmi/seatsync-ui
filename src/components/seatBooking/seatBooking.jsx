@@ -8,7 +8,7 @@ import {
   MenuItem,
   Box,
   Button,
-  Grid,
+  Grid, Typography, Card, CardContent,
   RadioGroup,
   Radio,
   TextField
@@ -27,7 +27,7 @@ import {
   selectDates,
   selectBookingType,
   selectStartTime,
-  selectEndTime, selectBooking, availableSeats, loadingSeats, errorSeats
+  selectEndTime, selectBooking, availableSeats, loadingSeats, errorSeats, selectAvailabilityList
 } from "../../redux/Booking/selectors";
 import { setFormData, resetForm, fetchDcDetails, fetchAvailableSeats } from "../../redux/Booking/actions";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -55,7 +55,9 @@ function SeatBooking() {
   const availableSeats = useSelector((state) => state.booking.availableSeats);
   const loadingSeats = useSelector((state) => state.booking.loadingSeats);
   const errorSeats = useSelector((state) => state.booking.errorSeats);
-  console.log("bookingType", bookingType)
+  const availabilityList = useSelector(selectAvailabilityList);
+   console.log("FullDayAvailability availableList:", availabilityList);
+  
   // const endTime = useSelector(selectEndTime);
   // const startTime = useSelector(selectStartTime);
 
@@ -125,7 +127,7 @@ function SeatBooking() {
     const selectedBlock = selectedBranch?.blocks.find(
       (bl) => bl.blockName === block
     );
-    if (block) {
+    if ( dates && block) {
       setWingOptions(selectedBlock?.wings || []);
     } else {
       setWingOptions([]);
@@ -429,6 +431,48 @@ function SeatBooking() {
   )} */}
 {/* </Box> */}
 
+<Box sx={{ mt: 3 }}>
+      {loading ? (
+        <Typography>Loading...</Typography>
+      ) : availabilityList && availabilityList.length > 0 ? (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",   // ✅ horizontal layout
+            gap: 2,                 // spacing between cards
+            overflowX: "auto",      // scroll if too many cards
+            p: 2,
+          }}
+        >
+          {availabilityList.map((item) => (
+            <>
+            <Card
+              key={item.date}
+              sx={{
+                minWidth: 200,
+                backgroundColor:item.availableSeats == 0 ? "yellow" :"green",
+                color: "white",
+                borderRadius: "8px",
+                flexShrink: 0, // prevents card from shrinking in flexbox
+              }}
+            >
+            
+             <CardContent>
+                <Typography variant="h6">{item.date}</Typography>
+                <Typography>Available Seats: {item.availableSeats}</Typography>
+                {item.availableSeats === 0 && (<Typography>CurrentStatus: {item.status}</Typography>)}             
+              </CardContent>
+              </Card>
+            </>
+        
+          )
+          )}
+        </Box>
+      ) : (
+        <Typography>No availability data</Typography>
+      )}
+    </Box>
+    
 
       {/* Submit Button */}
       <Box sx={{ mt: 3, textAlign: "center" }}>

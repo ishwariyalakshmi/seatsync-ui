@@ -6,8 +6,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectBooking } from "../../redux/Booking/selectors";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import { useEffect } from "react";
-import { fetchTicketDetails } from "../../redux/TicketsLists/actions";  //Booked tickets
-import { selectTicketsLists } from "../../redux/TicketsLists/selectors";
+import { fetchTicketDetails } from "../../redux/BookedTickets/actions";  //Booked tickets
+import { selectTicketsLists } from "../../redux/BookedTickets/selectors";
 
 function BookedTicketsPage() {
   const navigate = useNavigate();

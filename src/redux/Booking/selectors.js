@@ -20,6 +20,24 @@ export const selectDcData = (state) => state.booking.dcData;
 export const selectLoading = (state) => state.booking.loading;
 export const selectError = (state) => state.booking.error;
 
-export const availableSeats = (state) => state.booking.availableSeats;
+
 export const loadingSeats = (state) => state.booking.loadingSeats;
 export const errorSeats = (state) => state.booking.errorSeats;
+
+export const selectFullDayAvailability = (state) =>  state.booking.fullDayAvailability;
+
+
+
+// Derived selector: flatten into array for easy mapping
+export const selectAvailabilityList = (state) => {
+  const fullDay = state.booking.fullDayAvailability || {};
+  console.log("FullDayAvailability Selector:", fullDay);
+  console.log("FullDayAvailability Selector Entries:", Object.entries(fullDay));
+  return Object.entries(fullDay).map(([date, info]) => ({
+    date,
+    availableSeats: info.availableSeats,
+    totalSeats: info.totalSeats,
+    status: info.currentStatus,
+    wingId: info.wingId,
+  }));
+};
