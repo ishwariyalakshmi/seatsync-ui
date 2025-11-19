@@ -14,8 +14,8 @@ function App() {
        <LocalizationProvider dateAdapter={AdapterDayjs}>
        <Router>
       <Routes>
-        <Route path="/" element={<BookedTickets/>} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/booked-seats" element={<BookedTickets/>} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/book-seat" element={<SeatBooking />} />
         <Route path="/scan-qr" element={<QRScanner/>} />
       </Routes>

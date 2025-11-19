@@ -21,7 +21,7 @@ const LoginPage = () => {
 
         dispatch(loginSuccess({ employeeId }));
         alert("Login successful!");
-        navigate("/");
+        navigate("/booked-seats");
       } else {
         dispatch(loginFailure("Invalid credentials"));
         alert("Login failed: Invalid credentials");

@@ -1,0 +1,99 @@
+/* Entire page */
+.qr-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f7ff, #e3ebff);
+  font-family: "Inter", sans-serif;
+}
+
+/* Header */
+.qr-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  background: linear-gradient(45deg, #007bff, #7a00ff);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-align: center;
+}
+
+.qr-subtext {
+  margin-top: -8px;
+  font-size: 1rem;
+  color: #555;
+  text-align: center;
+}
+
+/* Main card */
+.qr-card {
+  margin-top: 35px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(18px);
+  padding: 25px;
+  width: 90%;
+  max-width: 420px;
+  border-radius: 22px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Scanner */
+.qr-scanner-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.qr-scanner {
+  border-radius: 18px !important;
+  overflow: hidden;
+  width: 100%;
+  box-shadow: 0 0 0 5px rgba(0, 123, 255, 0.1),
+              0 0 20px rgba(123, 0, 255, 0.15);
+}
+
+/* Result Cards */
+.qr-result {
+  text-align: center;
+  padding: 20px;
+}
+
+.qr-result.success {
+  color: #0a8f55;
+}
+
+.qr-result.error {
+  color: #d62828;
+}
+
+.qr-btn {
+  margin-top: 18px;
+  padding: 10px 25px;
+  background: linear-gradient(90deg, #007bff, #7a00ff);
+  border: none;
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.qr-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+/* Loading */
+.qr-loading {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #444;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
