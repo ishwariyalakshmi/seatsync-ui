@@ -36,8 +36,8 @@ export const fetchTicketDetails = (employeeId) => async (dispatch) => {
     );
 
     // axios auto-parses JSON → use res.data
-    dispatch(fetchTicketSuccess(res.data));
-    console.log("BookedTickets", res.data);
+    dispatch(fetchTicketSuccess(res.data.empSeats));
+    console.log("BookedTickets", res.data.empSeats);
   } catch (err) {
     dispatch(fetchTicketFailure(err.message));
   }

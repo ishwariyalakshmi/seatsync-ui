@@ -26,7 +26,7 @@ export const ticketsListsReducer = (state = initialState, action) => {
     case FETCH_TICKET_REQUEST:
       return { ...state, loading: true, error: null };
     case FETCH_TICKET_SUCCESS:
-      return { ...state, loading: false, dcData: action.payload };
+      return { ...state, loading: false, bookedData: action.payload };
     case FETCH_TICKET_FAILURE:
       return { ...state, loading: false, error: action.payload };
     case SET_FORM_DATA:
