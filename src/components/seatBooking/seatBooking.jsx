@@ -8,7 +8,7 @@ import {
   MenuItem,
   Box,
   Button,
-  Grid, Typography, Card, CardContent,
+  Grid, Typography, Card, CardContent,Tooltip,
   RadioGroup,
   Radio,
   TextField
@@ -29,13 +29,14 @@ import {
   selectStartTime,
   selectEndTime, selectBooking, availableSeats, loadingSeats, errorSeats, selectAvailabilityList
 } from "../../redux/Booking/selectors";
-import { setFormData, resetForm, fetchDcDetails, fetchAvailableSeats } from "../../redux/Booking/actions";
+import { setFormData, resetForm, fetchDcDetails, fetchAvailableSeats, bookSeat } from "../../redux/Booking/actions";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import { styled } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import  LoadingOverlay  from '../../sharedComponent/Loading/loading';
 
 
 function SeatBooking() {
@@ -74,7 +75,8 @@ function SeatBooking() {
   const [wingOptions, setWingOptions] = useState([]);
   const booking = useSelector((state) => state.booking);
   console.log("Full booking state:", booking);
-
+  const { employeeId} = useSelector((state) => state.auth);
+console.log("employeeIdBook a seat", employeeId)
 
  
   // Fetch API data on mount
@@ -168,13 +170,33 @@ function SeatBooking() {
     }
   }
 };
+const handleSubmit = () => {
+  // Find selected wingId from wingOptions
+  const selectedWing = wingOptions.find((w) => w.wingName === wing);
 
+  if (!selectedWing) {
+    alert("Please select a wing before booking!");
+    return;
+  }
 
-  const handleSubmit = () => {
-    console.log("Booking Details:", formData);
-    alert(`Booking confirmed!\n${JSON.stringify(formData, null, 2)}`);
-    dispatch(resetForm());
+  const payload = {
+    wingId: selectedWing.wingId,
+    employee_id: employeeId, // you can replace with logged-in user
+    dates: dates.length ? dates : [dayjs().format("YYYY-MM-DD")],
   };
+
+  console.log("Booking Payload:", payload);
+
+  // Dispatch Redux thunk
+  dispatch(bookSeat(payload));
+};
+
+
+  // const handleSubmit = () => {
+  //   console.log("Booking Details:", formData);
+  //   alert(`Booking confirmed!\n${JSON.stringify(formData, null, 2)}`);
+  //   dispatch(resetForm());
+  // };
 
   const getNext7Days = () => {
     const today = new Date();
@@ -203,7 +225,7 @@ function SeatBooking() {
   };
 
 
-  return ( loading ? (<div>Loading data centers... </div> ):
+  return ( loading ? (<div><LoadingOverlay loading={loading} /> </div> ):
 
     <Box sx={{ flexGrow: 1, p: 3 ,height: "100%"}}>
       <Grid container spacing={3}>
@@ -475,11 +497,19 @@ function SeatBooking() {
     
 
       {/* Submit Button */}
-      <Box sx={{ mt: 3, textAlign: "center" }}>
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
-          Book Seat
-        </Button>
-      </Box>
+      <Tooltip title="Select a wing and date to see availability">
+  <span>
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={handleSubmit}
+      disabled={!(availabilityList && availabilityList.length > 0)}
+    >
+      Book Seat
+    </Button>
+  </span>
+</Tooltip>
+
     </Box>
   
   );

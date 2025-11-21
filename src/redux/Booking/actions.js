@@ -1,7 +1,9 @@
 // src/redux/actions.js
 import { SET_FORM_DATA, RESET_FORM, FETCH_DC_REQUEST, FETCH_DC_SUCCESS, FETCH_DC_FAILURE,  
-  FETCH_AVAILABLE_SEATS_REQUEST, FETCH_AVAILABLE_SEATS_SUCCESS, FETCH_AVAILABLE_SEATS_FAILURE
-
+  FETCH_AVAILABLE_SEATS_REQUEST, FETCH_AVAILABLE_SEATS_SUCCESS, FETCH_AVAILABLE_SEATS_FAILURE,
+BOOK_SEAT_REQUEST,
+  BOOK_SEAT_SUCCESS,
+  BOOK_SEAT_FAILURE,
 } from "./actionTypes";
 import axios from "axios";
 
@@ -33,6 +35,22 @@ export const fetchAvailableSeatsFailure = (error) => ({
   type: FETCH_AVAILABLE_SEATS_FAILURE,
   payload: error,
 });
+
+//Book a seat
+export const bookSeatRequest = () => ({
+  type: BOOK_SEAT_REQUEST,
+});
+
+export const bookSeatSuccess = (data) => ({
+  type: BOOK_SEAT_SUCCESS,
+  payload: data,
+});
+
+export const bookSeatFailure = (error) => ({
+  type: BOOK_SEAT_FAILURE,
+  payload: error,
+});
+
 
 // Thunk for API call
 export const fetchDcDetails = () => async (dispatch) => {
@@ -79,3 +97,30 @@ export const fetchAvailableSeats = (wingId, duration, dates, timeSlot) => async 
     dispatch(fetchAvailableSeatsFailure(error.message));
   }
 };
+
+
+//Thunk Action to book a seat
+// src/redux/actions.js
+
+export const bookSeat = (payload) => async (dispatch) => {
+  dispatch(bookSeatRequest());
+  try {
+    const response = await axios.post(
+      "https://seatn-sync-production.up.railway.app/infy/seats/bookSeat", // ✅ your booking endpoint
+      payload,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    dispatch(bookSeatSuccess(response.data));
+    console.log("Booking Success:", response.data);
+  } catch (error) {
+    dispatch(bookSeatFailure(error.message));
+    console.error("Booking Error:", error);
+  }
+};
+
