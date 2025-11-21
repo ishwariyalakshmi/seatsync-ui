@@ -18,14 +18,14 @@ export const fetchTicketFailure = (error) => ({ type: FETCH_TICKET_FAILURE, payl
 
 // Thunk for API call
 // Thunk action
-export const fetchTicketDetails = () => async (dispatch) => {
+export const fetchTicketDetails = (employeeId) => async (dispatch) => {
   dispatch(fetchTicketRequest());
   try {
     const res = await axios.post(
-      "https://seatn-sync-production.up.railway.app/infy/emp/101/seat",
+      `https://seatn-sync-production.up.railway.app/infy/emp/${employeeId}/seat`,
       {
         // ✅ payload goes here
-        empId: 101,   // dynamic if needed
+        empId: employeeId,   // dynamic if needed
         seat: "A1",   // example field, replace with actual booking data
       },
       {

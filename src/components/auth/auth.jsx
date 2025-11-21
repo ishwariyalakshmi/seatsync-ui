@@ -17,7 +17,7 @@ const LoginPage = () => {
     dispatch(loginStart());
     try {
       // Fake API call (replace with real backend)
-      if (employeeId === "123" && password === "password") {
+      if (employeeId && password === "password") {
 
         dispatch(loginSuccess({ employeeId }));
         alert("Login successful!");

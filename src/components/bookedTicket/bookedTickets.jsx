@@ -24,7 +24,7 @@ function BookedTicketsPage() {
       const fetchData = async () => {
         try {
           console.log("fetchTicketDetails func fired");
-          dispatch(fetchTicketDetails());
+          dispatch(fetchTicketDetails(employeeId));
         }
         catch {
           console.log("error");
