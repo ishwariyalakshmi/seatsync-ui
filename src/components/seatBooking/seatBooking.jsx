@@ -145,7 +145,8 @@ function SeatBooking() {
           selectedWing.wingId,                        
           bookingType || "FullDay",                   
           dates.length ? dates : [dayjs().format("YYYY-MM-DD")], 
-          { startTime: "09:00", endTime: "11:00" } 
+          { startTime: "09:00", endTime: "11:00" },
+          employeeId
         ));
       }
     }
@@ -312,40 +313,56 @@ function SeatBooking() {
                   }
                 }}
               >
-                {availabilityList.map((item) => (
-                  <>
-                    <Card
-                      key={item.date}
-                      onClick={() => {
-                        setSelectedDates((prev) =>
-                          prev.includes(item.date)
-                            ? prev.filter((d) => d !== item.date) // remove if already selected
-                            : [...prev, item.date]               // add if not selected
-                        );
-                      }}
-                      sx={{
-                        minWidth: 200,
-                        backgroundColor: selectedDates.includes(item.date)
-                          ? "blue" // highlight if selected
-                          : item.availableSeats === 0
-                            ? "#e4b521"
-                            : "green",
-                        color: "white",
-                        borderRadius: "8px",
-                        flexShrink: 0,
-                        cursor: "pointer",
-                        "&:hover": { opacity: 0.8 },
-                      }}
-                    >
-                      <CardContent>
-                        <Typography variant="h6">{item.date}</Typography>
-                        <Typography>Available Seats: {item.availableSeats}</Typography>
-                        {item.availableSeats === 0 && (<Typography>Current Status: {item.status}</Typography>)}
-                      </CardContent>
-                    </Card>
-                  </>
-                )
-                )}
+                  {availabilityList.map((item) => (
+                    <>
+                      <Card
+                        key={item.date}
+                        sx={{
+                          minWidth: 200,
+                          backgroundColor: selectedDates.includes(item.date)
+                            ? "blue" // highlight if selected
+                            : item.availableSeats === 0
+                              ? "#e4b521"
+                              : "green",
+                          color: "white",
+                          borderRadius: "8px",
+                          flexShrink: 0,
+                          cursor: item.currentStatus === "BOOKED" ? "not-allowed" : "pointer", // disable click
+                          "&:hover": { opacity: 0.8 },
+                        }}
+                      >
+                        <Tooltip
+                          title={
+                            item.currentStatus === "BOOKED"
+                              ? "This date is already booked"
+                              : "Click to select/unselect"
+                          }
+                        >
+                          <CardContent
+                            onClick={() => {
+                              if (item.currentStatus === "BOOKED") {
+                                // ❌ Do nothing if already booked
+                                return;
+                              }
+                              setSelectedDates((prev) =>
+                                prev.includes(item.date)
+                                  ? prev.filter((d) => d !== item.date) // remove if already selected
+                                  : [...prev, item.date]               // add if not selected
+                              );
+                            }}
+                          >
+                            <Typography variant="h6">{item.date}</Typography>
+                            <Typography>Available Seats: {item.availableSeats}</Typography>
+                            {item.availableSeats === 0 && (
+                              <Typography>Current Status: {item.status}</Typography>
+                            )}
+                          </CardContent>
+                        </Tooltip>
+                      </Card>
+
+                    </>
+                  )
+                  )}
               </Box>
             </Box>
           </>
