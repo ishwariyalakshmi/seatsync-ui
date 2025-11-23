@@ -1,34 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  FormControl,
-  FormControlLabel,
+  FormControl,  
   InputLabel,
   Select,
   MenuItem,
   Box,
   Button,
-  Grid, Typography, Card, CardContent, Tooltip,
-  RadioGroup,
-  Radio,
-  TextField
+  Grid, Typography, Card, CardContent, Tooltip,  
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
   selectCity,
   selectBranch,
   selectBlock,
-  selectWing,
-  selectSeatType,
-  selectRow,
+  selectWing,  
   selectSeatNumber,
   selectLoading,
   selectDcData,
   selectError,
   selectDates,
   selectBookingType,
-  selectStartTime,
-  selectEndTime, selectBooking, availableSeats, loadingSeats, errorSeats, selectAvailabilityList,selectBookingSuccess, selectBookingError
+  selectBooking, selectAvailabilityList, selectBookingSuccess, selectBookingError
 } from "../../redux/Booking/selectors";
 import { setFormData, resetForm, fetchDcDetails, fetchAvailableSeats, bookSeat } from "../../redux/Booking/actions";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -42,33 +35,18 @@ import CustomSnackbar from "../../sharedComponent/snackBar/CustomSnackbar";
 import { CLEAR_BOOKING_MESSAGE } from "../../redux/Booking/actionTypes";
 
 function SeatBooking() {
-  const formData = useSelector((state) => state);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const bookings = useSelector(selectBooking)
-
   const city = useSelector(selectCity);
   const branch = useSelector(selectBranch);
   const block = useSelector(selectBlock);
-  const wing = useSelector(selectWing);
-  // const seatType = useSelector(selectSeatType);
-  // const row = useSelector(selectRow);
-  const seatNumber = useSelector(selectSeatNumber);
+  const wing = useSelector(selectWing); 
   const dates = useSelector(selectDates);
   const bookingType = useSelector(selectBookingType);
-
-  const availableSeats = useSelector((state) => state.booking.availableSeats);
-  const loadingSeats = useSelector((state) => state.booking.loadingSeats);
-  const errorSeats = useSelector((state) => state.booking.errorSeats);
   const bookingSuccessful = useSelector(selectBookingSuccess);
   const bookingErrors = useSelector(selectBookingError);
   const availabilityList = useSelector(selectAvailabilityList);
-  console.log("FullDayAvailability availableList:", availabilityList);
-
-  // const endTime = useSelector(selectEndTime);
-  // const startTime = useSelector(selectStartTime);
-
-
   const dcData = useSelector(selectDcData);
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
@@ -80,27 +58,23 @@ function SeatBooking() {
   const [blockOptions, setBlockOptions] = useState([]);
   const [wingOptions, setWingOptions] = useState([]);
   const [selectedDates, setSelectedDates] = useState([]);
-  const booking = useSelector((state) => state.booking);
-  console.log("Full booking state:", booking);
-  const { employeeId } = useSelector((state) => state.auth);
-  console.log("employeeIdBook a seat", employeeId)
+  const booking = useSelector((state) => state.booking); 
+  const { employeeId } = useSelector((state) => state.auth);  
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
-  const [snackbarMessage, setSnackbarMessage] = React.useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = React.useState("success");
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (bookingSuccessful) {
       setSnackbarMessage("Booking Successful!");
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
     } else if (bookingErrors) {
-      setSnackbarMessage("Unable to book seat. Please try again.");      
+      setSnackbarMessage("Unable to book seat. Please try again.");
       setSnackbarSeverity("error");
       setSnackbarOpen(true);
     }
   }, [bookingSuccessful, bookingErrors]);
-
 
   // Fetch API data on mount
   useEffect(() => {
@@ -116,8 +90,6 @@ function SeatBooking() {
     fetchData();
   }, [dispatch]);
 
-
-
   // Populate city options once
   useEffect(() => {
     console.log("Full booking state:", booking);
@@ -128,7 +100,6 @@ function SeatBooking() {
   useEffect(() => {
     // Always start from the selected city
     const selectedCity = dcData?.find((c) => c.cityName === city);
-
     // Branch options depend on city
     if (city) {
       setBranchOptions(selectedCity?.dataCenters || []);
@@ -136,7 +107,6 @@ function SeatBooking() {
       setBranchOptions([]);
       dispatch(setFormData("branch", ""));
     }
-
     // Block options depend on branch
     const selectedBranch = selectedCity?.dataCenters.find(
       (b) => b.dcName === branch
@@ -158,81 +128,42 @@ function SeatBooking() {
       setWingOptions([]);
       dispatch(setFormData("wing", ""));
     }
-  }, [city, branch, block, dcData, dispatch]);
-
-  //  if (loading) {
-  //     return <p>Loading data centers...</p>;
-  //   }
+  }, [city, branch, block, dcData, dispatch]);  
 
   if (error) {
     return <p>Error: {error}</p>;
   }
 
-  // if (!dcData || dcData.length === 0) {
-  //   return <p>No data available</p>;
-  // }
-
   const handleChange = (field) => (event) => {
-    const value = event.target.value;
-
-    // Update Redux form data
+    const value = event.target.value;   
     dispatch(setFormData(field, value));
-
     // If the field is "wing", trigger the API call
-    if (field === "wing") {
-      // Find the selected wing object (to get wingId)
+    if (field === "wing") {      
       const selectedWing = wingOptions.find((w) => w.wingName === value);
-
       if (selectedWing) {
         dispatch(fetchAvailableSeats(
-          selectedWing.wingId,                        // wingId
-          bookingType || "FullDay",                   // duration
-          dates.length ? dates : [dayjs().format("YYYY-MM-DD")], // dates
-          { startTime: "09:00", endTime: "11:00" } // timeSlot
+          selectedWing.wingId,                        
+          bookingType || "FullDay",                   
+          dates.length ? dates : [dayjs().format("YYYY-MM-DD")], 
+          { startTime: "09:00", endTime: "11:00" } 
         ));
       }
     }
   };
   const handleSubmit = () => {
-    // Find selected wingId from wingOptions
     const selectedWing = wingOptions.find((w) => w.wingName === wing);
-
     if (!selectedWing) {
       alert("Please select a wing before booking!");
       return;
     }
-
     const payload = {
       wingId: selectedWing.wingId,
-      employee_id: employeeId, // you can replace with logged-in user
+      employee_id: employeeId,
       dates: selectedDates,
     };
-
-    console.log("Booking Payload:", payload);
-
-    // Dispatch Redux thunk
-    dispatch(bookSeat(payload,navigate));
+    dispatch(bookSeat(payload, navigate));
     dispatch(resetForm());
-    // navigate("/booked-seats");
-
-  };
-
-
-  // const handleSubmit = () => {
-  //   console.log("Booking Details:", formData);
-  //   alert(`Booking confirmed!\n${JSON.stringify(formData, null, 2)}`);
-  //   dispatch(resetForm());
-  // };
-
-  const getNext7Days = () => {
-    const today = new Date();
-    return Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(today);
-      d.setDate(today.getDate() + i);
-      return d.toISOString().split("T")[0]; // YYYY-MM-DD
-    });
-  };
-  const next7Days = getNext7Days();
+  };  
 
   const handleDateChange = (newDate) => {
     console.log("newDate", newDate)
@@ -250,12 +181,9 @@ function SeatBooking() {
     console.log("dates2", formatted)
   };
 
-
   return (loading ? (<div><LoadingOverlay loading={loading} /> </div>) :
-
     <Box sx={{ flexGrow: 1, p: 3, height: "100%" }}>
       <Grid container spacing={3}>
-
         <Grid item size={4}>
           <FormControl fullWidth>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -298,9 +226,6 @@ function SeatBooking() {
             </Box>
           </FormControl>
         </Grid>
-
-
-
         {/* City Dropdown */}
         <Grid item size={4}>
           <FormControl fullWidth>
@@ -314,7 +239,6 @@ function SeatBooking() {
             </Select>
           </FormControl>
         </Grid>
-
         {/* Branch Dropdown */}
         <Grid item size={4}>
           <FormControl fullWidth>
@@ -328,7 +252,6 @@ function SeatBooking() {
             </Select>
           </FormControl>
         </Grid>
-
         {/* Block Dropdown */}
         <Grid item size={4}>
           <FormControl fullWidth>
@@ -342,7 +265,6 @@ function SeatBooking() {
             </Select>
           </FormControl>
         </Grid>
-
         {/* Wing Dropdown */}
         <Grid item size={4}>
           <FormControl fullWidth>
@@ -360,125 +282,7 @@ function SeatBooking() {
             </Select>
           </FormControl>
         </Grid>
-
-
-        {/* <Grid item xs={4}>
-  <FormControl fullWidth>
-    <InputLabel shrink>Available Seats</InputLabel>
-    <Box
-      sx={{
-        border: "1px solid #ccc",
-        borderRadius: 1,
-        padding: 1.5,
-        textAlign: "center",
-        fontSize: "1.2rem",
-        fontWeight: "bold",
-        backgroundColor: "#f9f9f9",
-        width: "30px",
-        height: "30px"
-      }}
-    >
-      {availableSeats ?? 0}
-    </Box>
-  </FormControl>
-</Grid>
-       */}
-
-        {/* Seat Type Dropdown */}
-        {/* <Grid item size={4}>
-          <FormControl fullWidth>
-            <InputLabel>Seat Type</InputLabel>
-            <Select value={seatType} label="Seat Type" onChange={handleChange("seatType")}>
-              <MenuItem value="Regular">Regular</MenuItem>
-              <MenuItem value="Premium">Premium</MenuItem>
-              <MenuItem value="VIP">VIP</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid> */}
-
-        {/* Row Dropdown */}
-        {/* <Grid item size={4}>
-          <FormControl fullWidth>
-            <InputLabel>Row</InputLabel>
-            <Select value={row} label="Row" onChange={handleChange("row")}>
-              <MenuItem value="A">Row A</MenuItem>
-              <MenuItem value="B">Row B</MenuItem>
-              <MenuItem value="C">Row C</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid> */}
-
-        {/* Seat Number Dropdown */}
-        {/* <Grid item size={4}>
-          <FormControl fullWidth>
-            <InputLabel>Seat Number</InputLabel>
-            <Select value={seatNumber} onChange={handleChange("seatNumber")}>
-              {[1, 2, 3, 4].map((num) => (
-                <MenuItem key={num} value={num}>
-                  {num}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-      </Grid> */}
-
-        {/* <Box sx={{ mt: 3 }}> */}
-        {/* Radio buttons */}
-        {/* <Grid container>
-    <Grid item xs={6}>
-      <FormControl component="fieldset">
-        <RadioGroup
-          row               // stack vertically if you want, or keep row for side-by-side
-          value={bookingType}
-          onChange={handleChange("bookingType")}
-        >
-          <FormControlLabel
-            value="fullDay"
-            control={<Radio />}
-            label="Full Day"
-          />
-          <FormControlLabel
-            value="timeSlot"
-            control={<Radio />}
-            label="Time Slot"
-          />
-        </RadioGroup>
-      </FormControl>
-  </Grid> */}
-      </Grid>
-      {/* Time Slot Inputs */}
-      {/* {bookingType === "timeSlot" && (
-    <Grid
-      container
-      spacing={2}
-      direction="row"           
-      style={{ marginTop: "10px" }}
-    >
-      <Grid item xs={6}>
-        <TextField
-          type="time"
-          label="Start Time"
-          value={startTime}
-          onChange={handleChange("startTime")}
-          InputLabelProps={{ shrink: true }}
-          fullWidth
-        />
-        </Grid>
-    <Grid item xs={6}>
-        <TextField
-          type="time"
-          label="End Time"
-          value={endTime}
-          onChange={handleChange("endTime")}
-          InputLabelProps={{ shrink: true }}
-          fullWidth
-        />
-      </Grid>
-    </Grid>
-  )} */}
-      {/* </Box> */}
-
+      </Grid>  
       <Box sx={{ mt: 3 }}>
         {loading ? (
           <Typography>Loading...</Typography>
@@ -487,9 +291,9 @@ function SeatBooking() {
             <Box
               sx={{
                 display: "flex",
-                flexDirection: "column", // stack label + cards vertically
-                alignItems: "flex-start", // left align
-                gap: 1,                   // spacing between label and cards
+                flexDirection: "column", 
+                alignItems: "flex-start",
+                gap: 1,
               }}
             >
               <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
@@ -498,9 +302,9 @@ function SeatBooking() {
               <Box
                 sx={{
                   display: "flex",
-                  flexDirection: "row",   // ✅ horizontal layout
-                  gap: 2,                 // spacing between cards
-                  overflowX: "auto",      // scroll if too many cards
+                  flexDirection: "row",  
+                  gap: 2,                 
+                  overflowX: "auto",      
                   p: 2,
                   cursor: "pointer",
                   "&:hover": {
@@ -510,7 +314,6 @@ function SeatBooking() {
               >
                 {availabilityList.map((item) => (
                   <>
-
                     <Card
                       key={item.date}
                       onClick={() => {
@@ -525,7 +328,7 @@ function SeatBooking() {
                         backgroundColor: selectedDates.includes(item.date)
                           ? "blue" // highlight if selected
                           : item.availableSeats === 0
-                            ? "yellow"
+                            ? "#e4b521"
                             : "green",
                         color: "white",
                         borderRadius: "8px",
@@ -534,7 +337,6 @@ function SeatBooking() {
                         "&:hover": { opacity: 0.8 },
                       }}
                     >
-
                       <CardContent>
                         <Typography variant="h6">{item.date}</Typography>
                         <Typography>Available Seats: {item.availableSeats}</Typography>
@@ -542,7 +344,6 @@ function SeatBooking() {
                       </CardContent>
                     </Card>
                   </>
-
                 )
                 )}
               </Box>
@@ -552,10 +353,8 @@ function SeatBooking() {
           <Typography>No availability data</Typography>
         )}
       </Box>
-
-
       {/* Submit Button */}
-      <Tooltip title="Select a wing and date to see availability">
+      <Tooltip title="Select the dates to book a seat">
         <span>
           <Button
             variant="contained"
@@ -568,19 +367,16 @@ function SeatBooking() {
           </Button>
         </span>
       </Tooltip>
-
-       <CustomSnackbar
+      <CustomSnackbar
         open={snackbarOpen}
         message={snackbarMessage}
         severity={snackbarSeverity}
         onClose={() => {
           setSnackbarOpen(false);
           dispatch({ type: CLEAR_BOOKING_MESSAGE }); // ✅ clear Redux message
-  }}
+        }}
       />
-
     </Box>
-
   );
 }
 
