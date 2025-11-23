@@ -67,7 +67,7 @@ export const fetchDcDetails = () => async (dispatch) => {
 
 
 // Thunk Action (async)
-export const fetchAvailableSeats = (wingId, duration, dates, timeSlot) => async (dispatch) => {
+export const fetchAvailableSeats = (wingId, duration, dates, timeSlot,employeeId) => async (dispatch) => {
   dispatch(fetchAvailableSeatsRequest());
   try {
     const response = await axios.post(
@@ -77,6 +77,7 @@ export const fetchAvailableSeats = (wingId, duration, dates, timeSlot) => async 
         duration,
         dates,
         timeSlot,
+        employeeId
       },
       {
         headers: { "Content-Type": "application/json" },
