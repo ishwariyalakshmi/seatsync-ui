@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginStart, loginSuccess, loginFailure } from "../../redux/Auth/actions";  
 import { Box, Button, TextField, Typography } from "@mui/material";
+import logo from '../../assets/SeatNSyncLogo.jpeg';
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
@@ -39,6 +40,15 @@ const LoginPage = () => {
         borderRadius: 2,
       }}
     >
+
+      <Box sx={{ textAlign: "center", mb: 2 }}>
+  <img 
+    src={logo} 
+    alt="App Logo" 
+    style={{ width: 100, height: "auto", marginBottom: 10 }} 
+  />
+</Box>
+
       <Typography variant="h5" mb={2}>
         Employee Login
       </Typography>
