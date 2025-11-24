@@ -65,17 +65,17 @@ function SeatBooking() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  useEffect(() => {
-    if (bookingSuccessful) {
-      setSnackbarMessage("Booking Successful!");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
-    } else if (bookingErrors) {
-      setSnackbarMessage("Unable to book seat. Please try again.");
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
-    }
-  }, [bookingSuccessful, bookingErrors]);
+  // useEffect(() => {
+  //   if (bookingSuccessful) {
+  //     setSnackbarMessage("Booking Successful!");
+  //     setSnackbarSeverity("success");
+  //     setSnackbarOpen(true);
+  //   } else if (bookingErrors) {
+  //     setSnackbarMessage("Unable to book seat. Please try again.");
+  //     setSnackbarSeverity("error");
+  //     setSnackbarOpen(true);
+  //   }
+  // }, [bookingSuccessful, bookingErrors]);
 
   // Fetch API data on mount
   useEffect(() => {
@@ -395,7 +395,7 @@ function SeatBooking() {
           </Button>
         </span>
       </Tooltip>
-      <CustomSnackbar
+      {/* <CustomSnackbar
         open={snackbarOpen}
         message={snackbarMessage}
         severity={snackbarSeverity}
@@ -403,7 +403,7 @@ function SeatBooking() {
           setSnackbarOpen(false);
           dispatch({ type: CLEAR_BOOKING_MESSAGE }); // ✅ clear Redux message
         }}
-      />
+      /> */}
     </Box>
   );
 }
