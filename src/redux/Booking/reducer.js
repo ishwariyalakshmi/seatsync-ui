@@ -57,13 +57,13 @@ export const bookingReducer = (state = initialState, action) => {
       return {
         ...state,
         bookingLoading: false,
-        bookingSuccess: "Seat booked successfully!",
+        bookingSuccess: true,
         bookings: [...state.bookings, action.payload],        
       };
     case BOOK_SEAT_FAILURE:
-      return { ...state, bookingLoading: false, bookingError: "error" };
+      return { ...state, bookingLoading: false, bookingError: true };
     case CLEAR_BOOKING_MESSAGE:
-      return { ...state, bookingSuccess: null, bookingError: null };  
+      return { ...state, bookingSuccess: false, bookingError: false };  
     case SET_FORM_DATA:
       return {
         ...state,
