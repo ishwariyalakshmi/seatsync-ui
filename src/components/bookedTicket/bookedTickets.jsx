@@ -83,7 +83,7 @@ function BookedTicketsPage() {
   return (
     <Box sx={{ p: 2, position: "relative", minHeight: "100vh", bgcolor: "#f5f5f5" }}>
       <Typography variant="h5" gutterBottom sx={{ fontSize: '18px', fontWeight: 'bold', mb: 3 }}>
-        🎟️ Your Booked Tickets
+        🎟️ Your Booked Seats
       </Typography>
       <LoadingOverlay loading={loading} />
       {ticketList?.empSeats?.length ? (
@@ -139,7 +139,7 @@ function BookedTicketsPage() {
         ))
       ) : (
         <Typography variant="body1" sx={{ mt: 2 }}>
-          No tickets booked yet.
+          No Seats booked yet.
         </Typography>
       )}
       {teamSuggestion && (
